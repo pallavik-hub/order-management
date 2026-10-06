@@ -1,0 +1,4 @@
+.env
+ecommerce-app
+*.out
+*.exe

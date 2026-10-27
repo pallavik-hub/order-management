@@ -1,0 +1,101 @@
+1] go mod tidy
+
+2] go test -v ./tests/...
+
+3]go run main.go
+
+4] GET http://localhost:8080/health/live
+
+5] GET http://localhost:8080/health/ready
+
+6] POST http://localhost:8080/api/v1/auth/token
+
+Content-Type   application/json
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDEsInJvbGUiOiJjdXN0b21lciIsImV4cCI6MTc5MzE2OTk1OCwiaWF0IjoxNzkzMDgzNTU4fQ.tSdwAvZLewBADoG7tWMcDgKZ_z2XdH8xrN7NKk58zsU
+
+BODY :
+{"user_id": 101, "role": "customer"}
+
+
+
+Generate an Admin Token (User ID: 1):
+
+7] POST http://localhost:8080/api/v1/auth/token
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3OTMxNzAwNjgsImlhdCI6MTc5MzA4MzY2OH0.mBqVECQlaljkeF8fpjW79v0SLjK5kil3t8ogMYeyqps
+
+BODY :
+{"user_id": 1, "role": "admin"}
+
+
+
+
+Create an Order (POST /api/v1/orders)
+
+8] POST http://localhost:8080/api/v1/orders
+
+CUSTOMER TOKEN  :eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDEsInJvbGUiOiJjdXN0b21lciIsImV4cCI6MTc5MzE2OTk1OCwiaWF0IjoxNzkzMDgzNTU4fQ.tSdwAvZLewBADoG7tWMcDgKZ_z2XdH8xrN7NKk58zsU
+
+
+BODY :
+{
+    "customerId": 101,
+    "productId": 501,
+    "quantity": 2
+  }
+
+
+
+Get an Order by ID (GET /api/v1/orders/1)
+
+9] GET http://localhost:8080/api/v1/orders/1
+
+"Authorization: Bearer $CUSTOMER_TOKEN"
+
+
+
+List All Orders (GET /api/v1/orders — Requires Admin Role)
+
+10] GET http://localhost:8080/api/v1/orders
+
+"Authorization: Bearer $ADMIN_TOKEN"
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3OTMxNzAwNjgsImlhdCI6MTc5MzA4MzY2OH0.mBqVECQlaljkeF8fpjW79v0SLjK5kil3t8ogMYeyqps
+
+
+
+
+Update Order Status (PUT /api/v1/orders/1/status — Requires Admin Role)
+
+11] PUT http://localhost:8080/api/v1/orders/1/status
+
+"Authorization: Bearer $ADMIN_TOKEN"
+
+"Content-Type: application/json"
+
+BODY: 
+
+{"status": "CONFIRMED"}
+
+
+Query via GraphQL Gateway (POST /graphql)
+
+12] POST http://localhost:8080/graphql
+
+"Authorization: Bearer $ADMIN_TOKEN"
+
+BODY:
+
+{"query": "{ orders { id customerId totalPrice status } }"}
+
+
+
+Verify Prometheus Observability Metrics
+
+13] GET  http://localhost:8080/metrics
+
+
+
+
+
